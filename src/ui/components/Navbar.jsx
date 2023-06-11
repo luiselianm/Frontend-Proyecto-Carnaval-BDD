@@ -1,25 +1,27 @@
 import { Link, NavLink } from 'react-router-dom';
 
 
+
 export const Navbar = () => {
     return (
-        <nav className="navbar navbar-expand-sm navbar-dark bg-dark p-2">
+        <div className="navbar-menu">
+        <nav className="navbar navbar-expand-sm navbar-dark p-2">
             
             <Link 
-                className="navbar-brand" 
+                className="navbar-brand px-4" 
                 to="/"
             >
-                Carnaval Rio de Janeiro
+               CARNAVAL "Río de Janeiro"
             </Link>
 
-            <div className="navbar-collapse">
-                <div className="navbar-nav">
+            <div className="navbar-collapse px-4">
+                <div className="navbar-nav ms-auto">
 
                     <NavLink 
-                        className={ ({isActive}) => `nav-item nav-link ${ isActive ? 'active' : ''}`} 
+                        className={ ({isActive})=> `nav-item nav-link ${ isActive ? 'active' : ''}`} 
                         to="/planificacion"
                     >
-                        Planificacion
+                        Planificación
                     </NavLink>
 
                     <NavLink 
@@ -39,5 +41,6 @@ export const Navbar = () => {
             </div>
 
         </nav>
+    </div> 
     )
 }
