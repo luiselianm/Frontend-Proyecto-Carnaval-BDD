@@ -2,8 +2,8 @@
 export const VentasDesfiles = () => {
   return (
     <div className="container pt-4">
-        <table class="table caption-top">
-      <thead class="table-success">
+        <table className="table caption-top">
+      <thead className="table-success">
         <tr>
           <th scope="col">#</th>
           <th scope="col">Empresa</th>

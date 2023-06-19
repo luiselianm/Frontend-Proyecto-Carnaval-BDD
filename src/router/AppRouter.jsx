@@ -4,6 +4,7 @@ import { Navbar } from "../ui/components"
 import { VentasDesfiles, VentasGenerales, VentasPage } from "../ventas"
 import { ResultadosPage } from "../resultados"
 import { PlanificacionPage } from "../planificacion"
+import { MostrarResults } from "../resultados/MostrarResults"
 
 export const AppRouter = () => {
   return (
@@ -22,6 +23,8 @@ export const AppRouter = () => {
             <Route path="/ventas/generales" element={<VentasGenerales/>}/>
 
             <Route path="/resultados" element={<ResultadosPage/>}/>
+
+            <Route path="/resultados/resultadosfinal" element={<MostrarResults/>}/>
 
             <Route path="/*" element={<HomePage/>}/>
         </Routes>
