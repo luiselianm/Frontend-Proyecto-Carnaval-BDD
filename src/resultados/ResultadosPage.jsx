@@ -9,18 +9,15 @@ export const ResultadosPage = ({}) => {
 
   const navigate = useNavigate();
 
-  const toResults = () =>{
-      navigate ('resultadosfinal')
+  const toResults = (id_evento) =>{
+      navigate (`resultadosfinal`)
   }
 
   const getEventosD = async () =>{
     try {
         
-        const response = await fetch("http://localhost:5000/eventos");
+        const response = await fetch("http://localhost:5000/eventosdesfiles");
         const jsonData = await response.json();
-
-        console.log(jsonData);
-
         setEventosD(jsonData);
 
     } catch (err) {
@@ -28,9 +25,9 @@ export const ResultadosPage = ({}) => {
     }
 }
 
-  useEffect(() => {
-      getEventosD();
-  },[])
+    useEffect(() => {
+        getEventosD();
+    },[])
 
   return (
     <>
@@ -38,17 +35,20 @@ export const ResultadosPage = ({}) => {
       <h2 className="px-4">Resultados de los Desfiles</h2>
       <hr/>
         <div className="container">
-          <div className="list-group list-group-flush ">
+          <div className="list-group list-group-flush">
             {eventosD.map(evento => (
               
-              <div className="list-group-item">
+              <div className="list-group-item ">
                 {evento.nombre}
-                  <button type="button" className="btn btn-info" onClick={ toResults }>Info</button>
+                  <button 
+                    type="button" 
+                    className="btn btn-outline-primary" 
+                    onClick={ toResults }>
+                    Info</button>
               </div>
             ))} 
           </div>
         </div>
-        
     </>
   )
 }
