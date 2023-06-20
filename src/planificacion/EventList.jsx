@@ -28,11 +28,11 @@ export const EventList = () => {
                 {eventos.map(evento => (
                     <div className="accordion-item">
                         <h2 className="accordion-header">
-                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#flush-${evento.id_calen_eve}`} aria-expanded="false" aria-controls={`flush-${evento.id_calen_eve}`}>
                                 {evento.nombre} 
                             </button>
                         </h2>
-                        <div id="flush-collapseOne" className="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                        <div id={`flush-${evento.id_calen_eve}`} className="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                             <div className="accordion-body">
                                 {evento.descripcion}
                             </div>
