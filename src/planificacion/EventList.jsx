@@ -34,7 +34,15 @@ export const EventList = () => {
                         </h2>
                         <div id={`flush-${evento.id_calen_eve}`} className="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                             <div className="accordion-body">
-                                {evento.descripcion}
+                                <div >
+                                <strong>Hora de Inicio: </strong>{evento.hora_inicio}
+                                </div>
+                                <div >
+                                <strong>Fecha del Evento: </strong>{evento.fecha_evento}
+                                </div>
+                                <div>
+                                    {evento.descripcion}
+                                </div>
                             </div>
                         </div>
                     </div>
