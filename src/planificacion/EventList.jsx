@@ -25,7 +25,7 @@ export const EventList = () => {
         <>
             <div className="container">
                 <div className="accordion accordion-flush" id="accordionFlushExample">
-                {eventos.map(evento => (
+                {eventos.map(evento  => (
                     <div className="accordion-item">
                         <h2 className="accordion-header">
                             <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#flush-${evento.id_calen_eve}`} aria-expanded="false" aria-controls={`flush-${evento.id_calen_eve}`}>

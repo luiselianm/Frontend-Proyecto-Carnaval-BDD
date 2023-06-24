@@ -1,15 +1,23 @@
 import { useEffect, useState } from "react";
 import { FormGroup, FormLabel, FormSelect } from "react-bootstrap";
+import { useForm } from "react-hook-form";
 
 export const VentasGenerales = () => {
   const [isLoading, setLoading] = useState(true);
   const [ano_sel, setano] = useState(0);
-  const [Cantidad_Entradas, setCantidad_Entradas] = useState(0);
+  const [cantidad, setCantidad] = useState(0);
   const [Evento_Sel, setEvento_Sel] = useState();
   const [Show_Modal, setShow_Modal] = useState(false);
   const [eventoGP, setEventoGP] = useState([]);
   const [EventoCosto, setEventoCosto] = useState([]);
+  const [id_calen_eve, setid_calen_eve] = useState();
+  const [ano, setAnio] = useState();
+  const [costo, setCosto] = useState();
+
+  const [ isReady, setIsReady ] = useState(false);
+
   const anos = [];
+
 
   const getEventoGP = async () => {
     try {
@@ -25,13 +33,16 @@ export const VentasGenerales = () => {
     }
   };
 
+
+
   const obtenerDatos = async (e) => {
     //e.preventDefault();
     setIsReady(false);
-    (id_calen_eve = Evento_Sel.id_calen_eve),
-      (ano = Evento_Sel.fecha_evento),
-      (costo = Evento_Sel.costo),
-      (cantidad = Cantidad_Entradas);
+
+      console.log(id_calen_eve)
+      console.log(ano)
+      console.log(costo)
+      console.log(cantidad)
     try {
       const body = {
         id_calen_eve,
@@ -49,9 +60,18 @@ export const VentasGenerales = () => {
           //console.log(json)
           setIsReady(true);
         });
-      window.location = "/planificacion";
+      window.location = "/ventas/generales";
     } catch (error) {}
   };
+
+  const { register, handleSubmit, formState: { errors } } = useForm();
+
+  const onSubmit = data => {
+    console.log(data);
+    obtenerDatos(data);
+  }
+  console.log(errors);
+
 
   useEffect(() => {
     getEventoGP();
@@ -61,11 +81,14 @@ export const VentasGenerales = () => {
   const handleAno = (event) => {
     setano(event.target.value);
   };
-  const handleCantidad_Entradas = (event) => {
-    setCantidad_Entradas(event.target.value);
+  const handlecantidad = (event) => {
+    setCantidad(event.target.value);
   };
   const handleSeleccion = (EventoGP) => {
     setEvento_Sel(EventoGP);
+    setAnio(EventoGP.fecha_evento);
+    setCosto(EventoGP.costo);
+    setid_calen_eve(EventoGP.id_calen_eve);
     setShow_Modal(true);
     console.log(EventoGP);
   };
@@ -140,9 +163,9 @@ export const VentasGenerales = () => {
       {Show_Modal && (
         <div className="container p-4">
           <div
-            class="modal fade"
+            className="modal fade"
             id="exampleModal"
-            tabindex="-1"
+            tabIndex="-1"
             aria-labelledby="exampleModalLabel"
             aria-hidden="true"
           >
@@ -160,29 +183,29 @@ export const VentasGenerales = () => {
                   ></button>
                 </div>
                 <div class="modal-body">
+                <form onSubmit={handleSubmit(onSubmit)}>
                   <div class="mb-3">
                     <div className="pt-4"></div>
                     <div className="mb-3 form-floating">
                       <input
-                        value={Cantidad_Entradas}
+                        value={cantidad}
                         type="number"
                         className="form-control"
                         placeholder="Cantidad de entradas"
-                        onChange={handleCantidad_Entradas}
+                        onChange={handlecantidad}
                       />
                       <FormLabel>Cantidad de entradas</FormLabel>
                     </div>
                     <h6>Costo Total: </h6>
                     <h6>
-                      {(Cantidad_Entradas * Evento_Sel.costo).toFixed(2)} BRL |{" "}
-                      {((Cantidad_Entradas * Evento_Sel.costo) / 4.78).toFixed(
+                      {(cantidad * Evento_Sel.costo).toFixed(2)} BRL |{" "}
+                      {((cantidad * Evento_Sel.costo) / 4.78).toFixed(
                         2
                       )}{" "}
                       $
                     </h6>
                   </div>
-                </div>
-                <div class="modal-footer">
+                  <div class="modal-footer">
                   <button
                     type="button"
                     class="btn btn-secondary"
@@ -190,9 +213,11 @@ export const VentasGenerales = () => {
                   >
                     Cerrar
                   </button>
-                  <button type="button" class="btn btn-primary">
+                  <button type="submit" class="btn btn-primary">
                     Guardar
                   </button>
+                </div>
+                </form>
                 </div>
               </div>
             </div>

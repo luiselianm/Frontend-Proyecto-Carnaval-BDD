@@ -45,6 +45,10 @@ export const ResultadosPage = ({}) => {
                     className="btn btn-outline-primary" 
                     onClick={ toResults }>
                     Info</button>
+                    <button 
+                    type="button" 
+                    className="btn btn-success" >
+                    Agregar Resultado</button>
               </div>
             ))} 
           </div>

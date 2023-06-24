@@ -13,11 +13,12 @@ export const AddEvent = () => {
   const [tipo_evento, setTipoE] = useState('');
   const [tipo_audiencia, setTipoA] = useState('');
   const [gratis_pago, setGraPag] = useState('');
+  const [direccion, setDir] = useState([]);
   const [descripcion, setDesc] = useState('');
+
 
   const [ isReady, setIsReady ] = useState(false);
 
-  //const [evento, setEvento ] = useState(null);
 
   //Metodos del modal
   const [show, setShow] = useState(false);
@@ -28,6 +29,20 @@ export const AddEvent = () => {
   useEffect(() => {
     obtenerDatos();
 },[])
+
+
+  useEffect(() => {
+    fetch('http://localhost:5000/direccion')
+    .then ( resp => resp.json())
+    .then(data => setDir (data))
+  },[])
+
+  const handleChange = (evento) => {
+  console.log(evento)
+  }
+
+//console.log(direccion);
+
 
   const obtenerDatos = async e => {
     //e.preventDefault();
@@ -41,7 +56,6 @@ export const AddEvent = () => {
       })
         .then (resp => resp.json() )
         .then ( json =>{
-          //console.log(json)
           setIsReady(true);
       })
       window.location = "/planificacion"
@@ -50,11 +64,14 @@ export const AddEvent = () => {
     }
   }
 
+
+
   const { register, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = data => {
     console.log(data);
     obtenerDatos(data);
+    //obtenerDir(data);
   }
   console.log(errors);
 
@@ -85,7 +102,6 @@ export const AddEvent = () => {
               placeholder ="Ingrese el nombre" 
               value ={ nombre } 
               onChange ={e => setNombre(e.target.value)}
-              //{...register("nombre", {})} 
               />
             </div><br/>
               <label>Hora Inicio</label>
@@ -100,7 +116,6 @@ export const AddEvent = () => {
                   placeholder ="Formato 00:00:00" 
                   value ={ hora_inicio } 
                   onChange ={e => setHora(e.target.value)}
-                  //{...register("hora_inicio", {})}
                   />
               </div><br/>
               <label>Fecha del Evento</label>
@@ -112,7 +127,6 @@ export const AddEvent = () => {
                   type="date" 
                   name="fecha_evento"
                   className ="form-control" 
-                  //placeholder ="Formato AAAA-MM-DD" 
                   value ={ fecha_evento } 
                   onChange ={e => setFecha(e.target.value)}
                   />
@@ -142,7 +156,6 @@ export const AddEvent = () => {
                   placeholder ="D = desfile, G = general" 
                   value ={ tipo_evento } 
                   onChange ={e => setTipoE(e.target.value)}
-                  // {...register("tipo_evento", {})}
                   />
               </div><br/>
               <label>Tipo de Audiencia del Evento</label>
@@ -157,7 +170,6 @@ export const AddEvent = () => {
                   placeholder ="true = todo publico, false = +18"
                   value ={ tipo_audiencia } 
                   onChange ={e => setTipoA(e.target.value)}
-                  // {...register("tipo_audiencia", {})}
                   />
               </div><br/>
               <label>Gratis o Pago</label>
@@ -172,9 +184,20 @@ export const AddEvent = () => {
                   placeholder ="G = gratis, P = pago" 
                   value ={ gratis_pago } 
                   onChange ={e => setGraPag(e.target.value)}
-                  // {...register("gratis_pago", {})}
                   />
               </div><br/>
+              <div>
+                {direccion.map( ({id_lugar_eventog, nombre }) =>(
+                    <div>
+                      <label key={id_lugar_eventog}>Direccion</label>
+                    <input type="checkbox" onChange={handleChange}/>
+                    { nombre }
+                    </div>
+                  ))
+                
+                }
+              </div>
+              
               <label>Descripción del Evento</label>
               <div className="input-group">
                 <div className="input-group-addon">
@@ -187,7 +210,6 @@ export const AddEvent = () => {
                   placeholder ="Ingresar descripción" 
                   value ={ descripcion } 
                   onChange ={e => setDesc(e.target.value)}
-                  // {...register("descripcion", {})} 
                   />
               </div><br/>
               <Modal.Footer>
