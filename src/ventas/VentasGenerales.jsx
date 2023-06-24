@@ -4,12 +4,11 @@ import { useForm } from "react-hook-form";
 
 export const VentasGenerales = () => {
   const [isLoading, setLoading] = useState(true);
-  const [ano_sel, setano] = useState(0);
+  const [ano_sel, setAno] = useState(0);
   const [cantidad, setCantidad] = useState(0);
   const [Evento_Sel, setEvento_Sel] = useState();
   const [Show_Modal, setShow_Modal] = useState(false);
   const [eventoGP, setEventoGP] = useState([]);
-  const [EventoCosto, setEventoCosto] = useState([]);
   const [id_calen_eve, setid_calen_eve] = useState();
   const [ano, setAnio] = useState();
   const [costo, setCosto] = useState();
@@ -33,16 +32,8 @@ export const VentasGenerales = () => {
     }
   };
 
-
-
   const obtenerDatos = async (e) => {
-    //e.preventDefault();
     setIsReady(false);
-
-      console.log(id_calen_eve)
-      console.log(ano)
-      console.log(costo)
-      console.log(cantidad)
     try {
       const body = {
         id_calen_eve,
@@ -57,7 +48,6 @@ export const VentasGenerales = () => {
       })
         .then((resp) => resp.json())
         .then((json) => {
-          //console.log(json)
           setIsReady(true);
         });
       window.location = "/ventas/generales";
@@ -79,7 +69,7 @@ export const VentasGenerales = () => {
   }, []);
 
   const handleAno = (event) => {
-    setano(event.target.value);
+    setAno(event.target.value);
   };
   const handlecantidad = (event) => {
     setCantidad(event.target.value);
@@ -126,7 +116,6 @@ export const VentasGenerales = () => {
             <th scope="col"></th>
             <th scope="col">Evento General</th>
             <th scope="col">Año</th>
-            {/* <th scope="col">Tipo Audiencia</th> */}
             <th scope="col">Costo</th>
           </tr>
         </thead>

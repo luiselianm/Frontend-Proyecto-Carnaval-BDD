@@ -9,12 +9,14 @@ export const AddEvent = () => {
   const [nombre, setNombre] = useState('');
   const [ano, setAno] = useState('');
   const [fecha_evento, setFecha] = useState('');
+  const [id_lugar_eventog, setLugar] = useState('');
   const [hora_inicio, setHora] = useState('');
   const [tipo_evento, setTipoE] = useState('');
   const [tipo_audiencia, setTipoA] = useState('');
   const [gratis_pago, setGraPag] = useState('');
   const [direccion, setDir] = useState([]);
   const [descripcion, setDesc] = useState('');
+  const [select, setSelect] = useState([]);
 
 
   const [ isReady, setIsReady ] = useState(false);
@@ -26,34 +28,41 @@ export const AddEvent = () => {
   const handleClose = () => setShow(false);
   const abrirModal = () => setShow(true);
 
+
+
   useEffect(() => {
     obtenerDatos();
 },[])
 
-
   useEffect(() => {
     fetch('http://localhost:5000/direccion')
     .then ( resp => resp.json())
-    .then(data => setDir (data))
+    .then (data => setDir (data))
   },[])
 
+
+
   const handleChange = (evento) => {
-  console.log(evento)
+    const {value, checked} = evento.target
+    if(checked) {
+      setSelect([value])
+      setLugar(evento.target.value)
+    }else 
+      setSelect(select.filter(v => v !==value))
   }
 
-//console.log(direccion);
 
 
   const obtenerDatos = async e => {
-    //e.preventDefault();
     setIsReady(false);
     try {
-      const body = { nombre, ano, fecha_evento, hora_inicio, tipo_evento, tipo_audiencia, gratis_pago, descripcion }
+      const body = { nombre, ano, id_lugar_eventog, fecha_evento, hora_inicio, tipo_evento, tipo_audiencia, gratis_pago, descripcion }
       await fetch('http://localhost:5000/agregarevento', {
         'method': 'POST',
         'headers': {'Content-Type': 'application/json'},
         'body': JSON.stringify(body)
       })
+      
         .then (resp => resp.json() )
         .then ( json =>{
           setIsReady(true);
@@ -65,13 +74,10 @@ export const AddEvent = () => {
   }
 
 
-
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = data => {
-    console.log(data);
     obtenerDatos(data);
-    //obtenerDir(data);
   }
   console.log(errors);
 
@@ -186,18 +192,16 @@ export const AddEvent = () => {
                   onChange ={e => setGraPag(e.target.value)}
                   />
               </div><br/>
+              <label>Direccion</label>
               <div>
-                {direccion.map( ({id_lugar_eventog, nombre }) =>(
+                {direccion.map( ({ id_lugar_eventog, nombre }) =>(
                     <div>
-                      <label key={id_lugar_eventog}>Direccion</label>
-                    <input type="checkbox" onChange={handleChange}/>
+                      <input value={id_lugar_eventog} type="checkbox" onChange={handleChange}/>
                     { nombre }
                     </div>
                   ))
-                
                 }
-              </div>
-              
+              </div><br/>
               <label>Descripción del Evento</label>
               <div className="input-group">
                 <div className="input-group-addon">
