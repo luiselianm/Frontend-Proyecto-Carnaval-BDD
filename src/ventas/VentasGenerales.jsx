@@ -1,52 +1,204 @@
 import { useEffect, useState } from "react";
+import { FormGroup, FormLabel, FormSelect } from "react-bootstrap";
 
 export const VentasGenerales = () => {
-  const [eventoGP, setEventoGP] = useState([])
+  const [isLoading, setLoading] = useState(true);
+  const [ano_sel, setano] = useState(0);
+  const [Cantidad_Entradas, setCantidad_Entradas] = useState(0);
+  const [Evento_Sel, setEvento_Sel] = useState();
+  const [Show_Modal, setShow_Modal] = useState(false);
+  const [eventoGP, setEventoGP] = useState([]);
+  const [EventoCosto, setEventoCosto] = useState([]);
+  const anos = [];
 
-  const getEventoGP = async () =>{
+  const getEventoGP = async () => {
     try {
-        
-        const response = await fetch("http://localhost:5000/eventosgeneralespagos");
-        const jsonData = await response.json();
-        setEventoGP(jsonData);
-        console.log(eventoGP)
-
+      const response = await fetch(
+        "http://localhost:5000/eventosgeneralespagos"
+      );
+      const jsonData = await response.json();
+      setEventoGP(jsonData);
+      console.log(jsonData);
+      setLoading(false);
     } catch (err) {
-        console.log(err.message);
+      console.log(err.message);
     }
-}
+  };
 
+  const obtenerDatos = async (e) => {
+    //e.preventDefault();
+    setIsReady(false);
+    (id_calen_eve = Evento_Sel.id_calen_eve),
+      (ano = Evento_Sel.fecha_evento),
+      (costo = Evento_Sel.costo),
+      (cantidad = Cantidad_Entradas);
+    try {
+      const body = {
+        id_calen_eve,
+        ano,
+        costo,
+        cantidad,
+      };
+      await fetch("http://localhost:5000/agregarentradas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      })
+        .then((resp) => resp.json())
+        .then((json) => {
+          //console.log(json)
+          setIsReady(true);
+        });
+      window.location = "/planificacion";
+    } catch (error) {}
+  };
 
-    useEffect(() => {
-      getEventoGP();
-    },[])
+  useEffect(() => {
+    getEventoGP();
+    setLoading(false);
+  }, []);
+
+  const handleAno = (event) => {
+    setano(event.target.value);
+  };
+  const handleCantidad_Entradas = (event) => {
+    setCantidad_Entradas(event.target.value);
+  };
+  const handleSeleccion = (EventoGP) => {
+    setEvento_Sel(EventoGP);
+    setShow_Modal(true);
+    console.log(EventoGP);
+  };
+
+  if (isLoading) {
+    return <div>Cargando</div>;
+  }
 
   return (
     <div className="container pt-4">
-        <table className="table caption-top">
-      <thead className="table-success">
-
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Nombre</th>
-        {/* <th scope="col">Tipo Audiencia</th> */}
-        <th scope="col">Costo</th>
-      </tr> 
-      </thead>
-      <tbody>
-          { 
-            eventoGP.map(eventoGP => (
-              <tr>
-                <th scope="row"></th>
-                <td>{eventoGP.nombre}</td>
-                {/* <td>{(eventoGP.tipo_audiencia )}</td> aqui hay que condicionar que si es true muestre todo publico y viceversa*/}
-                <td>{eventoGP.costo}</td>
-              </tr>
-            ))
-          }     
-      </tbody>
-    </table>
-  </div>
-    
-  )
-}
+      <FormGroup>
+        <FormLabel>Año</FormLabel>
+        <FormSelect onChange={handleAno}>
+          {eventoGP.map(
+            (evento) =>
+              !anos.includes(evento.fecha_evento) &&
+              anos.push(evento.fecha_evento)
+          )}
+          <option value={0}>Todos</option>
+          {anos.map((ano) => (
+            <option value={ano}>{ano}</option>
+          ))}
+          {eventoGP.map(
+            (evento) =>
+              !anos.includes(evento.fecha_evento) &&
+              anos.push(evento.fecha_evento)
+          )}
+          {console.log(anos)}
+        </FormSelect>
+      </FormGroup>
+      <div className="pt-4"></div>
+      <table className="table caption-top table-hover">
+        <thead className="table-success">
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Evento General</th>
+            <th scope="col">Año</th>
+            {/* <th scope="col">Tipo Audiencia</th> */}
+            <th scope="col">Costo</th>
+          </tr>
+        </thead>
+        <tbody
+          href="#"
+          class="link-dark"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal"
+        >
+          {ano_sel == 0
+            ? eventoGP.map((eventoGP) => (
+                <tr onClick={(e) => handleSeleccion(eventoGP, e)}>
+                  <th scope="row"></th>
+                  <td>{eventoGP.nombre}</td>
+                  <td>{eventoGP.fecha_evento}</td>
+                  {/* <td>{(eventoGP.tipo_audiencia )}</td> aqui hay que condicionar que si es true muestre todo publico y viceversa*/}
+                  <td>{eventoGP.costo} BRL</td>
+                </tr>
+              ))
+            : eventoGP.map(
+                (eventoGP) =>
+                  eventoGP.fecha_evento == ano_sel && (
+                    <tr onClick={(e) => handleSeleccion(eventoGP, e)}>
+                      <th scope="row"></th>
+                      <td>{eventoGP.nombre}</td>
+                      <td>{eventoGP.fecha_evento}</td>
+                      {/* <td>{(eventoGP.tipo_audiencia )}</td> aqui hay que condicionar que si es true muestre todo publico y viceversa*/}
+                      <td>{eventoGP.costo} BRL</td>
+                    </tr>
+                  )
+              )}
+        </tbody>
+      </table>
+      {Show_Modal && (
+        <div className="container p-4">
+          <div
+            class="modal fade"
+            id="exampleModal"
+            tabindex="-1"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">
+                    {Evento_Sel.nombre} ({Evento_Sel.fecha_evento})
+                  </h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <div className="pt-4"></div>
+                    <div className="mb-3 form-floating">
+                      <input
+                        value={Cantidad_Entradas}
+                        type="number"
+                        className="form-control"
+                        placeholder="Cantidad de entradas"
+                        onChange={handleCantidad_Entradas}
+                      />
+                      <FormLabel>Cantidad de entradas</FormLabel>
+                    </div>
+                    <h6>Costo Total: </h6>
+                    <h6>
+                      {(Cantidad_Entradas * Evento_Sel.costo).toFixed(2)} BRL |{" "}
+                      {((Cantidad_Entradas * Evento_Sel.costo) / 4.78).toFixed(
+                        2
+                      )}{" "}
+                      $
+                    </h6>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Cerrar
+                  </button>
+                  <button type="button" class="btn btn-primary">
+                    Guardar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
