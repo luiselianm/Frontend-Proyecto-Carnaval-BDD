@@ -4,8 +4,8 @@ import { useForm } from "react-hook-form";
 
 export const VentasGenerales = () => {
   const [isLoading, setLoading] = useState(true);
-  const [ano_sel, setAno] = useState(0);
-  const [cantidad, setCantidad] = useState(0);
+  const [ano_sel, setano] = useState(0);
+  const [cantidad, setCantidad] = useState("");
   const [Evento_Sel, setEvento_Sel] = useState();
   const [Show_Modal, setShow_Modal] = useState(false);
   const [eventoGP, setEventoGP] = useState([]);
@@ -13,10 +13,9 @@ export const VentasGenerales = () => {
   const [ano, setAnio] = useState();
   const [costo, setCosto] = useState();
 
-  const [ isReady, setIsReady ] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   const anos = [];
-
 
   const getEventoGP = async () => {
     try {
@@ -25,6 +24,7 @@ export const VentasGenerales = () => {
       );
       const jsonData = await response.json();
       setEventoGP(jsonData);
+      console.log(jsonData);
       setLoading(false);
     } catch (err) {
       console.log(err.message);
@@ -32,9 +32,20 @@ export const VentasGenerales = () => {
   };
 
   const obtenerDatos = async (e) => {
+    //e.preventDefault();
     setIsReady(false);
+
+    console.log(id_calen_eve);
+    console.log(ano);
+    console.log(costo);
+    console.log(cantidad);
     try {
-      const body = { id_calen_eve, ano, costo, cantidad}
+      const body = {
+        id_calen_eve,
+        ano,
+        costo,
+        cantidad,
+      };
       await fetch("http://localhost:5000/agregarentradas", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -42,20 +53,24 @@ export const VentasGenerales = () => {
       })
         .then((resp) => resp.json())
         .then((json) => {
+          //console.log(json)
           setIsReady(true);
         });
       window.location = "/ventas/generales";
     } catch (error) {}
   };
 
-  const { handleSubmit, formState: { errors } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  const onSubmit = data => {
+  const onSubmit = (data) => {
     console.log(data);
     obtenerDatos(data);
-  }
+  };
   console.log(errors);
-
 
   useEffect(() => {
     getEventoGP();
@@ -63,17 +78,19 @@ export const VentasGenerales = () => {
   }, []);
 
   const handleAno = (event) => {
-    setAno(event.target.value);
+    setano(event.target.value);
   };
   const handlecantidad = (event) => {
     setCantidad(event.target.value);
   };
   const handleSeleccion = (EventoGP) => {
+    setCantidad("");
     setEvento_Sel(EventoGP);
     setAnio(EventoGP.fecha_evento);
     setCosto(EventoGP.costo);
     setid_calen_eve(EventoGP.id_calen_eve);
     setShow_Modal(true);
+    console.log(EventoGP);
   };
 
   if (isLoading) {
@@ -94,11 +111,7 @@ export const VentasGenerales = () => {
           {anos.map((ano) => (
             <option value={ano}>{ano}</option>
           ))}
-          {eventoGP.map(
-            (evento) =>
-              !anos.includes(evento.fecha_evento) &&
-              anos.push(evento.fecha_evento)
-          )}
+          {console.log(anos)}
         </FormSelect>
       </FormGroup>
       <div className="pt-4"></div>
@@ -108,10 +121,16 @@ export const VentasGenerales = () => {
             <th scope="col"></th>
             <th scope="col">Evento General</th>
             <th scope="col">Año</th>
+            {/* <th scope="col">Tipo Audiencia</th> */}
             <th scope="col">Costo</th>
           </tr>
         </thead>
-        <tbody href="#" className="link-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <tbody
+          href="#"
+          class="link-dark"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal"
+        >
           {ano_sel == 0
             ? eventoGP.map((eventoGP) => (
                 <tr onClick={(e) => handleSeleccion(eventoGP, e)}>
@@ -145,57 +164,59 @@ export const VentasGenerales = () => {
             aria-labelledby="exampleModalLabel"
             aria-hidden="true"
           >
-            <div className="modal-dialog">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title" id="exampleModalLabel">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">
                     {Evento_Sel.nombre} ({Evento_Sel.fecha_evento})
                   </h5>
                   <button
                     type="button"
-                    className="btn-close"
+                    class="btn-close"
                     data-bs-dismiss="modal"
                     aria-label="Close"
                   ></button>
                 </div>
-                <div className="modal-body">
-                <form onSubmit={handleSubmit(onSubmit)}>
-                  <div className="mb-3">
-                    <div className="pt-4"></div>
-                    <div className="mb-3 form-floating">
-                      <input
-                        value={cantidad}
-                        type="number"
-                        className="form-control"
-                        placeholder="Cantidad de entradas"
-                        onChange={handlecantidad}
-                      />
-                      <FormLabel>Cantidad de entradas</FormLabel>
+                <div class="modal-body">
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <div class="mb-3">
+                      <div className="pt-4"></div>
+                      <div className="mb-3 form-floating">
+                        <input
+                          value={cantidad}
+                          type="number"
+                          className="form-control"
+                          placeholder="0"
+                          onChange={handlecantidad}
+                        />
+                        <FormLabel>Cantidad de entradas</FormLabel>
+                      </div>
+                      <h6>Costo Total: </h6>
+                      <h6>
+                        {(cantidad * Evento_Sel.costo).toFixed(2)} BRL |{" "}
+                        {((cantidad * Evento_Sel.costo) / 4.78).toFixed(2)} $
+                      </h6>
                     </div>
-                    <h6>Costo Total: </h6>
-                    <h6>
-                      {(cantidad * Evento_Sel.costo).toFixed(2)} BRL |{" "}{((cantidad * Evento_Sel.costo) / 4.78).toFixed(2)}{" "}$
-                    </h6>
-                  </div>
-                  <div className="modal-footer">
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    data-bs-dismiss="modal"
-                  >
-                    Cerrar
-                  </button>
-                  <button type="submit" className="btn btn-primary">
-                    Guardar
-                  </button>
-                </div>
-                </form>
+                    <div class="modal-footer">
+                      <button
+                        type="button"
+                        class="btn btn-danger"
+                        data-bs-dismiss="modal"
+                      >
+                        Cancelar
+                      </button>
+                      <button type="submit" class="btn btn-success">
+                        Seleccionar
+                      </button>
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>
           </div>
         </div>
       )}
+        
     </div>
   );
 };

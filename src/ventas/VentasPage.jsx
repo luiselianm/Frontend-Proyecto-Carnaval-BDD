@@ -22,8 +22,8 @@ export const VentasPage = () => {
         </div>
         <div className="col-md-8">
            <div className="card-body">
-             <h5 className="card-title"><strong>Venta De Entradas - Desfiles</strong></h5>
-             <p className="card-text">El siguiente apartado es utilizado para todo lo que tiene que ver con la venta de entradas de los defiles. </p>
+             <h5 className="card-title"><strong>Reservas - Desfiles</strong></h5>
+             <p className="card-text">El siguiente apartado es utilizado para todo lo que tiene que ver con las reservas de los desfiles. </p>
              <button className="btn btn-success" onClick={toDesfiles}> Seleccionar </button>
            </div>
         </div>
