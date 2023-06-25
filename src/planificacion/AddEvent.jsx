@@ -52,7 +52,6 @@ export const AddEvent = () => {
   }
 
 
-
   const obtenerDatos = async e => {
     setIsReady(false);
     try {
