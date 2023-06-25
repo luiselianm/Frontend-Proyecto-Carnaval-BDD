@@ -29,16 +29,16 @@ export const EventList = () => {
       
     return (
         <>
-            <div className="container">
+            <br/><div className="container">
                 <FormGroup>
-                    <FormLabel>Año</FormLabel>
+                    <FormLabel><strong>Año</strong></FormLabel>
                     <FormSelect onChange={handleAno}>
                         {eventos.map(
                             (evento) =>
                                 !anos.includes(evento.ano) &&
                                 anos.push(evento.ano)
                         )}
-                        <option value={0}>Todos</option>
+                        <option value={0}>Seleccione un año</option>
                         {anos.map((ano) => (
                             <option value={ano}>{ano}</option>
                         ))}
@@ -49,7 +49,7 @@ export const EventList = () => {
                         )}
                     </FormSelect>
                 </FormGroup>
-                <div className="accordion accordion-flush" id="accordionFlushExample">
+                <br/><div className="accordion accordion-flush" id="accordionFlushExample">
 
                     {ano_sel == 0
                         ? eventos.map(evento  => (

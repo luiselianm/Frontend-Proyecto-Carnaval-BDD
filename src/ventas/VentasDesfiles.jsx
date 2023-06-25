@@ -31,13 +31,7 @@ export const VentasDesfiles = () => {
   };
 
   const obtenerDatos = async (e) => {
-    //e.preventDefault();
     setIsReady(false);
-
-    console.log(num_rif);
-    console.log(id_entradas);
-    console.log(cantidades);
-    console.log(totales);
     try {
       const body = {
         num_rif,
@@ -52,21 +46,19 @@ export const VentasDesfiles = () => {
       })
         .then((resp) => resp.json())
         .then((json) => {
-          //console.log(json)
+          console.log(json)
           setIsReady(true);
         });
-      window.location = "/ventas/generales";
+      window.location = "/ventas/desfiles";
     } catch (error) {}
   };
 
   const {
-    register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
     obtenerDatos(data);
   };
   console.log(errors);

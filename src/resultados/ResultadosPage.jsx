@@ -29,11 +29,7 @@ export const ResultadosPage = ({}) => {
   const obtenerDatos = async ({ evento }) => {
     setIsReady(false);
     try {
-      console.log(escuelas_pos);
-      console.log(posiciones);
-      console.log(id_evento);
       const body = { escuelas_pos, posiciones, id_evento };
-      //console.log(body);
       await fetch(`http://localhost:5000/updatepos`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -66,7 +62,7 @@ export const ResultadosPage = ({}) => {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
+    //console.log(data);
     obtenerDatos(data);
   };
   console.log(errors);
@@ -96,17 +92,17 @@ export const ResultadosPage = ({}) => {
 
   return (
     <>
-      <hr />
-      <h2 className="px-4">Resultados de los Desfiles</h2>
-      <hr />
-      <div className="container">
+      
+      <br/><div className="container">
         <FormGroup>
-          <FormLabel>Año</FormLabel>
+          <FormLabel><strong>Año</strong></FormLabel>
           <FormSelect onChange={handleAno}>
             {eventos.map(
-              (evento) => !anos.includes(evento.ano) && anos.push(evento.ano)
+              (evento) =>
+                !anos.includes(evento.ano) &&
+                anos.push(evento.ano)
             )}
-            <option value={0}>Todos</option>
+            <option value={0}>Seleccione un año</option>
             {anos.map((ano) => (
               <option value={ano}>{ano}</option>
             ))}

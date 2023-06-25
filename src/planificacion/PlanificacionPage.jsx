@@ -4,8 +4,7 @@ import { EventList } from "./EventList"
 export const PlanificacionPage = () => {
   return (
     <>
-    
-
+  
       <EventList/>
 
     <hr />

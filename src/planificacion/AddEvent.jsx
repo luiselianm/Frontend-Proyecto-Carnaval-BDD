@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 
-//var evento;
 
 export const AddEvent = () => {
 
@@ -22,12 +21,10 @@ export const AddEvent = () => {
   const [ isReady, setIsReady ] = useState(false);
 
 
-  //Metodos del modal
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const abrirModal = () => setShow(true);
-
 
 
   useEffect(() => {
@@ -195,7 +192,12 @@ export const AddEvent = () => {
               <div>
                 {direccion.map( ({ id_lugar_eventog, nombre }) =>(
                     <div>
-                      <input value={id_lugar_eventog} type="checkbox" onChange={handleChange}/>
+                      <input 
+                        className="form-check-input"
+                        name="flexRadioDefault"
+                        value={id_lugar_eventog} 
+                        type="radio" 
+                        onChange={handleChange}/>
                     { nombre }
                     </div>
                   ))

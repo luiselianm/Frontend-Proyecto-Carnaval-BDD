@@ -24,7 +24,6 @@ export const VentasGenerales = () => {
       );
       const jsonData = await response.json();
       setEventoGP(jsonData);
-      console.log(jsonData);
       setLoading(false);
     } catch (err) {
       console.log(err.message);
@@ -32,13 +31,7 @@ export const VentasGenerales = () => {
   };
 
   const obtenerDatos = async (e) => {
-    //e.preventDefault();
     setIsReady(false);
-
-    console.log(id_calen_eve);
-    console.log(ano);
-    console.log(costo);
-    console.log(cantidad);
     try {
       const body = {
         id_calen_eve,
@@ -53,7 +46,7 @@ export const VentasGenerales = () => {
       })
         .then((resp) => resp.json())
         .then((json) => {
-          //console.log(json)
+          console.log(json)
           setIsReady(true);
         });
       window.location = "/ventas/generales";
@@ -61,13 +54,11 @@ export const VentasGenerales = () => {
   };
 
   const {
-    register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
     obtenerDatos(data);
   };
   console.log(errors);
@@ -90,7 +81,6 @@ export const VentasGenerales = () => {
     setCosto(EventoGP.costo);
     setid_calen_eve(EventoGP.id_calen_eve);
     setShow_Modal(true);
-    console.log(EventoGP);
   };
 
   if (isLoading) {
@@ -100,18 +90,17 @@ export const VentasGenerales = () => {
   return (
     <div className="container pt-4">
       <FormGroup>
-        <FormLabel>Año</FormLabel>
+        <FormLabel><strong>Año</strong></FormLabel>
         <FormSelect onChange={handleAno}>
           {eventoGP.map(
             (evento) =>
               !anos.includes(evento.fecha_evento) &&
               anos.push(evento.fecha_evento)
           )}
-          <option value={0}>Todos</option>
+          <option value={0}>Seleccione un año</option>
           {anos.map((ano) => (
             <option value={ano}>{ano}</option>
           ))}
-          {console.log(anos)}
         </FormSelect>
       </FormGroup>
       <div className="pt-4"></div>
@@ -121,13 +110,12 @@ export const VentasGenerales = () => {
             <th scope="col"></th>
             <th scope="col">Evento General</th>
             <th scope="col">Año</th>
-            {/* <th scope="col">Tipo Audiencia</th> */}
             <th scope="col">Costo</th>
           </tr>
         </thead>
         <tbody
           href="#"
-          class="link-dark"
+          className="link-dark"
           data-bs-toggle="modal"
           data-bs-target="#exampleModal"
         >
@@ -137,7 +125,6 @@ export const VentasGenerales = () => {
                   <th scope="row"></th>
                   <td>{eventoGP.nombre}</td>
                   <td>{eventoGP.fecha_evento}</td>
-                  {/* <td>{(eventoGP.tipo_audiencia )}</td> aqui hay que condicionar que si es true muestre todo publico y viceversa*/}
                   <td>{eventoGP.costo} BRL</td>
                 </tr>
               ))
@@ -148,7 +135,6 @@ export const VentasGenerales = () => {
                       <th scope="row"></th>
                       <td>{eventoGP.nombre}</td>
                       <td>{eventoGP.fecha_evento}</td>
-                      {/* <td>{(eventoGP.tipo_audiencia )}</td> aqui hay que condicionar que si es true muestre todo publico y viceversa*/}
                       <td>{eventoGP.costo} BRL</td>
                     </tr>
                   )
@@ -164,22 +150,22 @@ export const VentasGenerales = () => {
             aria-labelledby="exampleModalLabel"
             aria-hidden="true"
           >
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title" id="exampleModalLabel">
                     {Evento_Sel.nombre} ({Evento_Sel.fecha_evento})
                   </h5>
                   <button
                     type="button"
-                    class="btn-close"
+                    className="btn-close"
                     data-bs-dismiss="modal"
                     aria-label="Close"
                   ></button>
                 </div>
-                <div class="modal-body">
+                <div className="modal-body">
                   <form onSubmit={handleSubmit(onSubmit)}>
-                    <div class="mb-3">
+                    <div className="mb-3">
                       <div className="pt-4"></div>
                       <div className="mb-3 form-floating">
                         <input
@@ -197,15 +183,15 @@ export const VentasGenerales = () => {
                         {((cantidad * Evento_Sel.costo) / 4.78).toFixed(2)} $
                       </h6>
                     </div>
-                    <div class="modal-footer">
+                    <div className="modal-footer">
                       <button
                         type="button"
-                        class="btn btn-danger"
+                        className="btn btn-danger"
                         data-bs-dismiss="modal"
                       >
                         Cancelar
                       </button>
-                      <button type="submit" class="btn btn-success">
+                      <button type="submit" className="btn btn-success">
                         Seleccionar
                       </button>
                     </div>
@@ -216,7 +202,6 @@ export const VentasGenerales = () => {
           </div>
         </div>
       )}
-        
-    </div>
-  );
+    </div>
+  );
 };
